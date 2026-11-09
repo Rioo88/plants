@@ -11,8 +11,26 @@
     ],
   },
   "files": [
-    { "kind": "folder", "path": "plants", "target-membership": [ "plants" ] },
     {
+      "kind": "folder",
+      "path": "plants",
+      "target-membership": [
+        "plants",
+      ],
+      "membership-exceptions": [
+        {
+          "target": "plants",
+          "exclusions": [
+            "OnboardingView",
+          ],
+        }, {
+          "build-phase": "plants/compile-sources",
+          "inclusions": [
+            "OnboardingView",
+          ],
+        },
+      ],
+    }, {
       "kind": "group",
       "name": "Products",
       "children": [
