@@ -9,10 +9,10 @@ struct ContentView: View {
 
     var body: some View {
         Group {
-            if store.plants.isEmpty {
-                OnboardingView()
-            } else {
+            if store.hasStarted {
                 RemindersView()
+            } else {
+                OnboardingView()
             }
         }
         .environment(store)

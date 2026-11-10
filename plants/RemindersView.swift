@@ -18,7 +18,6 @@ struct RemindersView: View {
         store.plants.filter { $0.isWatered }.count
     }
 
-    // 🆕 ١: هل خلصنا الكل؟
     var allDone: Bool {
         !store.plants.isEmpty && wateredCount == store.plants.count
     }
@@ -33,9 +32,20 @@ struct RemindersView: View {
 
             Divider()
 
-            // 🆕 ٢: إذا خلصنا ← All Done، وإلا ← القائمة
-            if allDone {
+            // 🆕 الحالة ١: الدفتر فاضي
+            if store.plants.isEmpty {
+                Spacer()
+                Text("No reminders set yet..")
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
+                    .frame(maxWidth: .infinity)
+                Spacer()
+
+            // الحالة ٢: كلها انسقت
+            } else if allDone {
                 AllDoneView()
+
+            // الحالة ٣: القائمة
             } else {
                 VStack(spacing: 10) {
                     Text(wateredCount == 0
@@ -54,6 +64,15 @@ struct RemindersView: View {
                     ForEach(store.plants) { plant in
                         PlantRow(plant: plant) {
                             store.toggleWatered(plant)
+                        }
+                        .swipeActions {
+                            Button(role: .destructive) {
+                                withAnimation {
+                                    store.delete(plant)
+                                }
+                            } label: {
+                                Image(systemName: "trash")
+                            }
                         }
                     }
                 }

@@ -24,7 +24,9 @@ struct OnboardingView: View {
 
             VStack(spacing: 16) {
                 Image("plantStart")
-
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 150, height: 220)
                 Text("Start your plant journey!")
                     .font(.title3)
                     .bold()

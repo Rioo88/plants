@@ -85,7 +85,7 @@ struct SetReminderView: View {
                             water: water
                         )
                         // 🆕 ٣: نحطها في الدفتر
-                        store.plants.append(newPlant)
+                        store.add(newPlant)
                         // ونسكر الشاشة
                         dismiss()
                     } label: {

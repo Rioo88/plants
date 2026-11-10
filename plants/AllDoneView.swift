@@ -13,6 +13,9 @@ struct AllDoneView: View {
             Spacer()
 
             Image("plantDone")
+                .resizable()
+                .scaledToFit()
+                .frame(width: 150, height: 220)
 
             Text("All Done! 🎉")
                 .font(.title3)
