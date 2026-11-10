@@ -4,8 +4,18 @@
 import SwiftUI
 
 struct ContentView: View {
+
+    @State private var store = PlantStore()
+
     var body: some View {
-        onboarding_1_()
+        Group {
+            if store.plants.isEmpty {
+                OnboardingView()
+            } else {
+                RemindersView()
+            }
+        }
+        .environment(store)
     }
 }
 
