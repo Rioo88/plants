@@ -10,9 +10,8 @@ import SwiftUI
 struct SetReminderView: View {
 
     @Environment(\.dismiss) var dismiss
-    @Environment(PlantStore.self) var store
+    @Environment(PlantViewModel.self) var store
 
-    // 🆕 ١: النبتة اللي نعدلها (إذا فاضي = إضافة جديدة)
     var plantToEdit: Plant? = nil
 
     @State private var plantName = ""
@@ -33,34 +32,41 @@ struct SetReminderView: View {
                 }
 
                 Section {
-                    Picker("Room", selection: $room) {
+                    Picker(selection: $room) {
                         ForEach(Room.allCases, id: \.self) { room in
                             Text(room.rawValue)
                         }
+                    } label: {
+                        Label("Room", systemImage: "location")
                     }
 
-                    Picker("Light", selection: $light) {
+                    Picker(selection: $light) {
                         ForEach(Light.allCases, id: \.self) { light in
-                            Text(light.rawValue)
+                            Label(light.rawValue, systemImage: light.icon)
                         }
+                    } label: {
+                        Label("Light", systemImage: "sun.max")
                     }
                 }
 
                 Section {
-                    Picker("Watering Days", selection: $wateringDays) {
+                    Picker(selection: $wateringDays) {
                         ForEach(WateringDays.allCases, id: \.self) { days in
                             Text(days.rawValue)
                         }
+                    } label: {
+                        Label("Watering Days", systemImage: "drop")
                     }
 
-                    Picker("Water", selection: $water) {
+                    Picker(selection: $water) {
                         ForEach(WaterAmount.allCases, id: \.self) { amount in
                             Text(amount.rawValue)
                         }
+                    } label: {
+                        Label("Water", systemImage: "drop")
                     }
                 }
 
-                // 🆕 ٢: زر الحذف يطلع بس وقت التعديل
                 if let plant = plantToEdit {
                     Section {
                         Button(role: .destructive) {
@@ -73,6 +79,7 @@ struct SetReminderView: View {
                     }
                 }
             }
+            .tint(Color("PlantsGreen"))
             .navigationTitle("Set Reminder")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -91,11 +98,11 @@ struct SetReminderView: View {
                     } label: {
                         Image(systemName: "checkmark")
                     }
+                    .buttonStyle(.borderedProminent)
                     .tint(Color("PlantsGreen"))
                     .disabled(plantName.isEmpty)
                 }
             }
-            // 🆕 ٣: لما تنفتح الشاشة، عبّي المعلومات
             .onAppear {
                 if let plant = plantToEdit {
                     plantName = plant.name
@@ -108,10 +115,8 @@ struct SetReminderView: View {
         }
     }
 
-    // 🆕 ٤: الحفظ (تعديل أو إضافة)
     func save() {
         if var plant = plantToEdit {
-            // تعديل: نغير معلومات النبتة الموجودة
             plant.name = plantName
             plant.room = room
             plant.light = light
@@ -119,7 +124,6 @@ struct SetReminderView: View {
             plant.water = water
             store.update(plant)
         } else {
-            // إضافة: نسوي نبتة جديدة
             let newPlant = Plant(
                 name: plantName,
                 room: room,
@@ -135,5 +139,5 @@ struct SetReminderView: View {
 
 #Preview {
     SetReminderView()
-        .environment(PlantStore())
+        .environment(PlantViewModel())
 }

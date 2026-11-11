@@ -10,18 +10,10 @@ import SwiftUI
 // 📋 الشاشة الرئيسية
 struct RemindersView: View {
 
-    @Environment(PlantStore.self) var store
+    @Environment(PlantViewModel.self) var store
 
     @State private var showSheet = false
-    @State private var plantToEdit: Plant? = nil      // 🆕 ١
-
-    var wateredCount: Int {
-        store.plants.filter { $0.isWatered }.count
-    }
-
-    var allDone: Bool {
-        !store.plants.isEmpty && wateredCount == store.plants.count
-    }
+    @State private var plantToEdit: Plant? = nil
 
     var body: some View {
         VStack(alignment: .leading) {
@@ -41,17 +33,15 @@ struct RemindersView: View {
                     .frame(maxWidth: .infinity)
                 Spacer()
 
-            } else if allDone {
+            } else if store.allDone {                    // 🆕 من الطباخ
                 AllDoneView()
 
             } else {
                 VStack(spacing: 10) {
-                    Text(wateredCount == 0
-                         ? "Your plants are waiting for a sip 💦"
-                         : "\(wateredCount) of your plants feel loved today ✨")
+                    Text(store.progressText)             // 🆕 من الطباخ
                         .font(.subheadline)
 
-                    ProgressView(value: Double(wateredCount),
+                    ProgressView(value: Double(store.wateredCount),   // 🆕
                                  total: Double(store.plants.count))
                         .tint(Color("PlantsGreen"))
                 }
@@ -63,7 +53,6 @@ struct RemindersView: View {
                         PlantRow(plant: plant) {
                             store.toggleWatered(plant)
                         }
-                        // 🆕 ٢: الضغط على الصف يفتح التعديل
                         .contentShape(Rectangle())
                         .onTapGesture {
                             plantToEdit = plant
@@ -96,11 +85,9 @@ struct RemindersView: View {
             }
             .padding()
         }
-        // إضافة جديدة
         .sheet(isPresented: $showSheet) {
             SetReminderView()
         }
-        // 🆕 ٣: تعديل
         .sheet(item: $plantToEdit) { plant in
             SetReminderView(plantToEdit: plant)
         }
@@ -160,24 +147,6 @@ struct PlantRow: View {
 }
 
 #Preview {
-    let store = PlantStore()
-
-    store.plants.append(
-        Plant(name: "Monstera",
-              room: .kitchen,
-              light: .fullSun,
-              wateringDays: .everyDay,
-              water: .ml20to50)
-    )
-
-    store.plants.append(
-        Plant(name: "Pothos",
-              room: .bedroom,
-              light: .partialSun,
-              wateringDays: .every2Days,
-              water: .ml50to100)
-    )
-
-    return RemindersView()
-        .environment(store)
+    RemindersView()
+        .environment(PlantViewModel())
 }

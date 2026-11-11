@@ -19,6 +19,15 @@ enum Light: String, CaseIterable, Codable {
     case fullSun = "Full Sun"
     case partialSun = "Partial Sun"
     case lowLight = "Low Light"
+
+    // 🆕 أيقونة لكل إضاءة
+    var icon: String {
+        switch self {
+        case .fullSun: return "sun.max"
+        case .partialSun: return "sun.horizon"
+        case .lowLight: return "moon"
+        }
+    }
 }
 
 enum WateringDays: String, CaseIterable, Codable {
@@ -29,7 +38,6 @@ enum WateringDays: String, CaseIterable, Codable {
     case every10Days = "Every 10 days"
     case every2Weeks = "Every 2 weeks"
 
-    // 🆕 كم يوم؟
     var days: Int {
         switch self {
         case .everyDay: return 1

@@ -5,12 +5,14 @@ import SwiftUI
 
 struct ContentView: View {
 
-    @State private var store = PlantStore()
-    @State private var showSplash = true          // 🆕 ١
+    @State private var store = PlantViewModel()
+    @State private var showSplash = true
+
+    @Environment(\.scenePhase) var scenePhase
 
     var body: some View {
         Group {
-            if showSplash {                       // 🆕 ٢
+            if showSplash {
                 SplashView()
             } else if store.hasStarted {
                 RemindersView()
@@ -19,10 +21,15 @@ struct ContentView: View {
             }
         }
         .environment(store)
-        .task {                                   // 🆕 ٣
+        .task {
             try? await Task.sleep(for: .seconds(2))
             withAnimation {
                 showSplash = false
+            }
+        }
+        .onChange(of: scenePhase) {
+            if scenePhase == .active {
+                store.resetIfNewDay()
             }
         }
     }

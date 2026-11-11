@@ -1,28 +1,35 @@
 //
-//  Plant.swift
-//  plants
+//  PlantViewModel.swift
+//  Planto
 //
-//  Created by RIOO on 30/05/1448 AH.
+//  Created by RIOO on 01/06/1448 AH.
 //
+
 import Foundation
 import Observation
 
-// 🪴 الورقة: معلومات نبتة وحدة
-struct Plant: Identifiable, Codable {
-    var id = UUID()
-    var name: String
-    var room: Room
-    var light: Light
-    var wateringDays: WateringDays
-    var water: WaterAmount
-    var isWatered = false
-}
-
-// 📒 الدفتر: فيه كل النباتات
+// 👨‍🍳 ViewModel: المخ اللي يدير كل النباتات
 @Observable
-class PlantStore {
+class PlantViewModel {
     var plants: [Plant] = []
     var hasStarted = false
+
+    // 🆕 كم نبتة انسقت؟
+    var wateredCount: Int {
+        plants.filter { $0.isWatered }.count
+    }
+
+    // 🆕 هل خلصنا الكل؟
+    var allDone: Bool {
+        !plants.isEmpty && wateredCount == plants.count
+    }
+
+    // 🆕 النص اللي فوق الشريط
+    var progressText: String {
+        wateredCount == 0
+        ? "Your plants are waiting for a sip 💦"
+        : "\(wateredCount) of your plants feel loved today ✨"
+    }
 
     init() {
         load()
@@ -58,7 +65,6 @@ class PlantStore {
         save()
     }
 
-    // 🔄 إذا صار يوم جديد، رجّع كل الدوائر ○
     func resetIfNewDay() {
         let lastReset = UserDefaults.standard.object(forKey: "lastReset") as? Date ?? Date()
 

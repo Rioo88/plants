@@ -64,4 +64,5 @@ struct OnboardingView: View {
 
 #Preview {
     OnboardingView()
+        .environment(PlantViewModel())
 }
