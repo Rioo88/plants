@@ -10,7 +10,10 @@ import SwiftUI
 struct SetReminderView: View {
 
     @Environment(\.dismiss) var dismiss
-    @Environment(PlantStore.self) var store      // 🆕 ١
+    @Environment(PlantStore.self) var store
+
+    // 🆕 ١: النبتة اللي نعدلها (إذا فاضي = إضافة جديدة)
+    var plantToEdit: Plant? = nil
 
     @State private var plantName = ""
     @State private var room = Room.bedroom
@@ -22,7 +25,6 @@ struct SetReminderView: View {
         NavigationStack {
 
             Form {
-                // ١. اسم النبتة
                 Section {
                     HStack {
                         Text("Plant Name")
@@ -30,7 +32,6 @@ struct SetReminderView: View {
                     }
                 }
 
-                // ٢. الغرفة والإضاءة
                 Section {
                     Picker("Room", selection: $room) {
                         ForEach(Room.allCases, id: \.self) { room in
@@ -45,7 +46,6 @@ struct SetReminderView: View {
                     }
                 }
 
-                // ٣. السقي والماء
                 Section {
                     Picker("Watering Days", selection: $wateringDays) {
                         ForEach(WateringDays.allCases, id: \.self) { days in
@@ -59,12 +59,24 @@ struct SetReminderView: View {
                         }
                     }
                 }
+
+                // 🆕 ٢: زر الحذف يطلع بس وقت التعديل
+                if let plant = plantToEdit {
+                    Section {
+                        Button(role: .destructive) {
+                            store.delete(plant)
+                            dismiss()
+                        } label: {
+                            Text("Delete Reminder")
+                                .frame(maxWidth: .infinity)
+                        }
+                    }
+                }
             }
             .navigationTitle("Set Reminder")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
 
-                // زر الإلغاء ✕
                 ToolbarItem(placement: .cancellationAction) {
                     Button {
                         dismiss()
@@ -73,33 +85,55 @@ struct SetReminderView: View {
                     }
                 }
 
-                // زر الحفظ ✓
                 ToolbarItem(placement: .confirmationAction) {
                     Button {
-                        // 🆕 ٢: نسوي ورقة النبتة الجديدة
-                        let newPlant = Plant(
-                            name: plantName,
-                            room: room,
-                            light: light,
-                            wateringDays: wateringDays,
-                            water: water
-                        )
-                        // 🆕 ٣: نحطها في الدفتر
-                        store.add(newPlant)
-                        // ونسكر الشاشة
-                        dismiss()
+                        save()
                     } label: {
                         Image(systemName: "checkmark")
                     }
                     .tint(Color("PlantsGreen"))
-                    .disabled(plantName.isEmpty)     // 🆕 ٤
+                    .disabled(plantName.isEmpty)
+                }
+            }
+            // 🆕 ٣: لما تنفتح الشاشة، عبّي المعلومات
+            .onAppear {
+                if let plant = plantToEdit {
+                    plantName = plant.name
+                    room = plant.room
+                    light = plant.light
+                    wateringDays = plant.wateringDays
+                    water = plant.water
                 }
             }
         }
+    }
+
+    // 🆕 ٤: الحفظ (تعديل أو إضافة)
+    func save() {
+        if var plant = plantToEdit {
+            // تعديل: نغير معلومات النبتة الموجودة
+            plant.name = plantName
+            plant.room = room
+            plant.light = light
+            plant.wateringDays = wateringDays
+            plant.water = water
+            store.update(plant)
+        } else {
+            // إضافة: نسوي نبتة جديدة
+            let newPlant = Plant(
+                name: plantName,
+                room: room,
+                light: light,
+                wateringDays: wateringDays,
+                water: water
+            )
+            store.add(newPlant)
+        }
+        dismiss()
     }
 }
 
 #Preview {
     SetReminderView()
-        .environment(PlantStore())                // 🆕 ٥
+        .environment(PlantStore())
 }

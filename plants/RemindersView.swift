@@ -13,6 +13,7 @@ struct RemindersView: View {
     @Environment(PlantStore.self) var store
 
     @State private var showSheet = false
+    @State private var plantToEdit: Plant? = nil      // 🆕 ١
 
     var wateredCount: Int {
         store.plants.filter { $0.isWatered }.count
@@ -32,7 +33,6 @@ struct RemindersView: View {
 
             Divider()
 
-            // 🆕 الحالة ١: الدفتر فاضي
             if store.plants.isEmpty {
                 Spacer()
                 Text("No reminders set yet..")
@@ -41,11 +41,9 @@ struct RemindersView: View {
                     .frame(maxWidth: .infinity)
                 Spacer()
 
-            // الحالة ٢: كلها انسقت
             } else if allDone {
                 AllDoneView()
 
-            // الحالة ٣: القائمة
             } else {
                 VStack(spacing: 10) {
                     Text(wateredCount == 0
@@ -64,6 +62,11 @@ struct RemindersView: View {
                     ForEach(store.plants) { plant in
                         PlantRow(plant: plant) {
                             store.toggleWatered(plant)
+                        }
+                        // 🆕 ٢: الضغط على الصف يفتح التعديل
+                        .contentShape(Rectangle())
+                        .onTapGesture {
+                            plantToEdit = plant
                         }
                         .swipeActions {
                             Button(role: .destructive) {
@@ -93,8 +96,13 @@ struct RemindersView: View {
             }
             .padding()
         }
+        // إضافة جديدة
         .sheet(isPresented: $showSheet) {
             SetReminderView()
+        }
+        // 🆕 ٣: تعديل
+        .sheet(item: $plantToEdit) { plant in
+            SetReminderView(plantToEdit: plant)
         }
     }
 }

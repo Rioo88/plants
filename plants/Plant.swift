@@ -8,8 +8,8 @@ import Foundation
 import Observation
 
 // 🪴 الورقة: معلومات نبتة وحدة
-struct Plant: Identifiable {
-    let id = UUID()
+struct Plant: Identifiable, Codable {
+    var id = UUID()
     var name: String
     var room: Room
     var light: Light
@@ -22,25 +22,53 @@ struct Plant: Identifiable {
 @Observable
 class PlantStore {
     var plants: [Plant] = []
-
-    // 🆕 هل المستخدم بدأ يستخدم التطبيق؟
     var hasStarted = false
 
-    // 🆕 تضيف نبتة وتتذكر إن المستخدم بدأ
+    init() {
+        load()
+    }
+
     func add(_ plant: Plant) {
         plants.append(plant)
         hasStarted = true
+        save()
+        NotificationManager.requestPermission()      // 🆕
+        NotificationManager.schedule(for: plant)     // 🆕
     }
 
-    // تبدل حالة السقي: ○ ↔ ✅
-    func toggleWatered(_ plant: Plant) {
+    func update(_ plant: Plant) {
         if let index = plants.firstIndex(where: { $0.id == plant.id }) {
-            plants[index].isWatered.toggle()
+            plants[index] = plant
+            save()
+            NotificationManager.schedule(for: plant) // 🆕
         }
     }
 
-    // تحذف نبتة 🗑️
+    func toggleWatered(_ plant: Plant) {
+        if let index = plants.firstIndex(where: { $0.id == plant.id }) {
+            plants[index].isWatered.toggle()
+            save()
+        }
+    }
+
     func delete(_ plant: Plant) {
+        NotificationManager.cancel(for: plant)       // 🆕
         plants.removeAll { $0.id == plant.id }
+        save()
+    }
+
+    private func save() {
+        if let data = try? JSONEncoder().encode(plants) {
+            UserDefaults.standard.set(data, forKey: "plants")
+        }
+        UserDefaults.standard.set(hasStarted, forKey: "hasStarted")
+    }
+
+    private func load() {
+        if let data = UserDefaults.standard.data(forKey: "plants"),
+           let saved = try? JSONDecoder().decode([Plant].self, from: data) {
+            plants = saved
+        }
+        hasStarted = UserDefaults.standard.bool(forKey: "hasStarted")
     }
 }
