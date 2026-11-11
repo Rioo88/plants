@@ -26,21 +26,22 @@ class PlantStore {
 
     init() {
         load()
+        resetIfNewDay()      // 🆕
     }
 
     func add(_ plant: Plant) {
         plants.append(plant)
         hasStarted = true
         save()
-        NotificationManager.requestPermission()      // 🆕
-        NotificationManager.schedule(for: plant)     // 🆕
+        NotificationManager.requestPermission()
+        NotificationManager.schedule(for: plant)
     }
 
     func update(_ plant: Plant) {
         if let index = plants.firstIndex(where: { $0.id == plant.id }) {
             plants[index] = plant
             save()
-            NotificationManager.schedule(for: plant) // 🆕
+            NotificationManager.schedule(for: plant)
         }
     }
 
@@ -52,9 +53,23 @@ class PlantStore {
     }
 
     func delete(_ plant: Plant) {
-        NotificationManager.cancel(for: plant)       // 🆕
+        NotificationManager.cancel(for: plant)
         plants.removeAll { $0.id == plant.id }
         save()
+    }
+
+    // 🆕 🔄 إذا صار يوم جديد، رجّع كل الدوائر ○
+    func resetIfNewDay() {
+        let lastReset = UserDefaults.standard.object(forKey: "lastReset") as? Date ?? Date()
+
+        if !Calendar.current.isDateInToday(lastReset) {
+            for index in plants.indices {
+                plants[index].isWatered = false
+            }
+            save()
+        }
+
+        UserDefaults.standard.set(Date(), forKey: "lastReset")
     }
 
     private func save() {
