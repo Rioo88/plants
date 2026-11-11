@@ -26,7 +26,7 @@ class PlantStore {
 
     init() {
         load()
-        resetIfNewDay()      // 🆕
+        resetIfNewDay()
     }
 
     func add(_ plant: Plant) {
@@ -58,7 +58,7 @@ class PlantStore {
         save()
     }
 
-    // 🆕 🔄 إذا صار يوم جديد، رجّع كل الدوائر ○
+    // 🔄 إذا صار يوم جديد، رجّع كل الدوائر ○
     func resetIfNewDay() {
         let lastReset = UserDefaults.standard.object(forKey: "lastReset") as? Date ?? Date()
 
