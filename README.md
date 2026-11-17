@@ -13,7 +13,7 @@ An iOS app that reminds you to water your plants and tracks your daily progress.
 - Data saved between launches, with a daily reset
 - Dark design with an Icon Composer app icon
 
-## **Tech Stack**
+## **Technologies**
 
 Swift · SwiftUI · MVVM · `@Observable` · UserDefaults + Codable · UserNotifications · Icon Composer
 
@@ -21,5 +21,5 @@ Swift · SwiftUI · MVVM · `@Observable` · UserDefaults + Codable · UserNotif
 
 Aryam Alghamdi
 
-Screenshot 
+ ## **Screenshot**
 <img width="1600" height="818" alt="banner" src="https://github.com/user-attachments/assets/aac71416-6eaa-4e61-a933-f76febc2db27" />
