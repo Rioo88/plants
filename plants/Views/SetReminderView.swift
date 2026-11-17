@@ -140,4 +140,5 @@ struct SetReminderView: View {
 #Preview {
     SetReminderView()
         .environment(PlantViewModel())
+        .preferredColorScheme(.dark)
 }

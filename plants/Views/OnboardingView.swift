@@ -28,10 +28,11 @@ struct OnboardingView: View {
                     .scaledToFit()
                     .frame(width: 150, height: 220)
                 Text("Start your plant journey!")
-                    .font(.title3)
+                    .font(.system(size: 22))
                     .bold()
 
                 Text("Now all your plants will be in one place and we will help you take care of them :) 🪴")
+                    .font(.system(size: 14))
                     .font(.footnote)
                     .foregroundStyle(.secondary)
                     .multilineTextAlignment(.center)
@@ -65,4 +66,5 @@ struct OnboardingView: View {
 #Preview {
     OnboardingView()
         .environment(PlantViewModel())
+        .preferredColorScheme(.dark)
 }

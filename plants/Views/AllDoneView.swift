@@ -18,10 +18,12 @@ struct AllDoneView: View {
                 .frame(width: 150, height: 220)
 
             Text("All Done! 🎉")
+                .font(.system(size: 22))
                 .font(.title3)
                 .bold()
 
             Text("All Reminders Completed")
+                .font(.system(size: 14))
                 .font(.footnote)
                 .foregroundStyle(.secondary)
 
@@ -34,4 +36,5 @@ struct AllDoneView: View {
 
 #Preview {
     AllDoneView()
+        .preferredColorScheme(.dark)
 }

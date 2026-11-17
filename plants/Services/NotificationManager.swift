@@ -26,8 +26,8 @@ enum NotificationManager {
         let seconds = Double(plant.wateringDays.days) * 24 * 60 * 60
 
         let trigger = UNTimeIntervalNotificationTrigger(
-            timeInterval: seconds,
-            repeats: true
+            timeInterval: 10,
+            repeats: false
         )
 
         let request = UNNotificationRequest(

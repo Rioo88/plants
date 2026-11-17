@@ -19,6 +19,7 @@ struct RemindersView: View {
         VStack(alignment: .leading) {
 
             Text("My Plants 🌱")
+                .font(.system(size: 34, weight: .bold, design: .rounded))
                 .font(.largeTitle)
                 .bold()
                 .padding(.horizontal)
@@ -149,4 +150,5 @@ struct PlantRow: View {
 #Preview {
     RemindersView()
         .environment(PlantViewModel())
+        .preferredColorScheme(.dark)
 }

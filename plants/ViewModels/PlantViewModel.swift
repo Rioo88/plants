@@ -29,6 +29,7 @@ class PlantViewModel {
         wateredCount == 0
         ? "Your plants are waiting for a sip 💦"
         : "\(wateredCount) of your plants feel loved today ✨"
+        
     }
 
     init() {
