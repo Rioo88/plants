@@ -41,12 +41,11 @@ struct OnboardingView: View {
                     showSheet = true   // 🆕 ٢
                 } label: {
                     Text("Set Plant Reminder")
-                        .bold()
+                        .font(.system(size: 17, weight: .medium))
                         .foregroundStyle(.white)
                         .frame(maxWidth: .infinity)
                         .padding()
-                        .background(Color("PlantsGreen"))
-                        .clipShape(Capsule())
+                        .glassEffect(.regular.tint(Color("PlantsGreen").opacity(0.6)).interactive(), in: .capsule)
                 }
                 .padding(.horizontal, 40)
                 .padding(.top, 30)

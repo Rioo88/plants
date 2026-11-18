@@ -98,7 +98,7 @@ struct SetReminderView: View {
                     } label: {
                         Image(systemName: "checkmark")
                     }
-                    .buttonStyle(.borderedProminent)
+                    .buttonStyle(.glassProminent)
                     .tint(Color("PlantsGreen"))
                     .disabled(plantName.isEmpty)
                 }

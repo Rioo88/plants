@@ -81,8 +81,7 @@ struct RemindersView: View {
                     .bold()
                     .foregroundStyle(.white)
                     .frame(width: 56, height: 56)
-                    .background(Color("PlantsGreen"))
-                    .clipShape(Circle())
+                    .glassEffect(.regular.tint(Color("PlantsGreen").opacity(0.6)).interactive(), in: .circle)
             }
             .padding()
         }
