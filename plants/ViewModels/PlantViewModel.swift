@@ -14,22 +14,26 @@ class PlantViewModel {
     var plants: [Plant] = []
     var hasStarted = false
 
-    // 🆕 كم نبتة انسقت؟
+    // كم نبتة انسقت؟
     var wateredCount: Int {
         plants.filter { $0.isWatered }.count
     }
 
-    // 🆕 هل خلصنا الكل؟
+    // هل خلصنا الكل؟
     var allDone: Bool {
         !plants.isEmpty && wateredCount == plants.count
     }
 
-    // 🆕 النص اللي فوق الشريط
+    // النص اللي فوق الشريط
     var progressText: String {
         wateredCount == 0
         ? "Your plants are waiting for a sip 💦"
         : "\(wateredCount) of your plants feel loved today ✨"
-        
+    }
+
+    // 🆕 اللي ما انسقت فوق، واللي انسقت تحت
+    var sortedPlants: [Plant] {
+        plants.sorted { !$0.isWatered && $1.isWatered }
     }
 
     init() {

@@ -19,7 +19,6 @@ struct RemindersView: View {
         VStack(alignment: .leading) {
 
             Text("My Plants 🌱")
-                .font(.system(size: 34, weight: .bold, design: .rounded))
                 .font(.largeTitle)
                 .bold()
                 .padding(.horizontal)
@@ -34,15 +33,15 @@ struct RemindersView: View {
                     .frame(maxWidth: .infinity)
                 Spacer()
 
-            } else if store.allDone {                    // 🆕 من الطباخ
+            } else if store.allDone {
                 AllDoneView()
 
             } else {
                 VStack(spacing: 10) {
-                    Text(store.progressText)             // 🆕 من الطباخ
+                    Text(store.progressText)
                         .font(.subheadline)
 
-                    ProgressView(value: Double(store.wateredCount),   // 🆕
+                    ProgressView(value: Double(store.wateredCount),
                                  total: Double(store.plants.count))
                         .tint(Color("PlantsGreen"))
                 }
@@ -50,7 +49,7 @@ struct RemindersView: View {
                 .padding()
 
                 List {
-                    ForEach(store.plants) { plant in
+                    ForEach(store.sortedPlants) { plant in      // 🆕 sortedPlants
                         PlantRow(plant: plant) {
                             store.toggleWatered(plant)
                         }
@@ -141,6 +140,7 @@ struct PlantRow: View {
                         .clipShape(Capsule())
                 }
             }
+            .opacity(plant.isWatered ? 0.4 : 1)      // 🆕 البهتان
         }
         .padding(.vertical, 4)
     }
